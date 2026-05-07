@@ -1,0 +1,248 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.app{display:flex;min-height:620px;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden;background:var(--color-background-primary)}
+.sb{width:200px;min-width:200px;background:var(--color-background-secondary);border-right:0.5px solid var(--color-border-tertiary);display:flex;flex-direction:column}
+.sb-logo{padding:14px 14px 10px;border-bottom:0.5px solid var(--color-border-tertiary);margin-bottom:6px}
+.sb-logo-title{font-size:13px;font-weight:500;color:var(--color-text-primary);line-height:1.3}
+.sb-logo-sub{font-size:10px;color:var(--color-text-tertiary);margin-top:2px}
+.sb-label{font-size:10px;font-weight:500;color:var(--color-text-tertiary);letter-spacing:.07em;text-transform:uppercase;padding:8px 14px 4px}
+.nav{cursor:pointer;display:flex;align-items:center;gap:8px;padding:8px 14px;font-size:12px;color:var(--color-text-secondary);border-left:2px solid transparent;line-height:1.3}
+.nav:hover{background:var(--color-background-tertiary);color:var(--color-text-primary)}
+.nav.on{background:var(--color-background-primary);color:var(--color-text-primary);border-left-color:#1D9E75;font-weight:500}
+.nav i{font-size:15px;min-width:16px}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.topbar{padding:14px 18px 12px;border-bottom:0.5px solid var(--color-border-tertiary);display:flex;align-items:center;justify-content:space-between;gap:10px}
+.topbar-left h2{font-size:15px;font-weight:500;color:var(--color-text-primary)}
+.topbar-left p{font-size:11px;color:var(--color-text-tertiary);margin-top:1px}
+.search-wrap{position:relative}
+.search-wrap i{position:absolute;left:8px;top:50%;transform:translateY(-50%);font-size:14px;color:var(--color-text-tertiary);pointer-events:none}
+.search-wrap input{padding:6px 10px 6px 28px;font-size:12px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--color-background-primary);color:var(--color-text-primary);width:180px}
+.content{flex:1;overflow-y:auto;padding:14px 18px}
+.drug-table{width:100%;border-collapse:collapse;font-size:12px}
+.drug-table th{text-align:left;font-size:10px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.06em;padding:6px 10px;background:var(--color-background-secondary);border-bottom:0.5px solid var(--color-border-tertiary)}
+.drug-table td{padding:9px 10px;border-bottom:0.5px solid var(--color-border-tertiary);color:var(--color-text-primary);vertical-align:top;line-height:1.45}
+.drug-table tr:last-child td{border-bottom:none}
+.drug-table tr:hover td{background:var(--color-background-secondary)}
+.drug-name{font-weight:500;font-size:13px;color:var(--color-text-primary)}
+.dose-text{color:var(--color-text-secondary);font-size:12px;line-height:1.5}
+.badge{display:inline-block;font-size:10px;padding:2px 7px;border-radius:10px;white-space:nowrap}
+.b-teal{background:#E1F5EE;color:#085041}
+.b-blue{background:#E6F1FB;color:#185FA5}
+.b-amber{background:#FAEEDA;color:#854F0B}
+.b-red{background:#FCEBEB;color:#A32D2D}
+.b-purple{background:#EEEDFE;color:#534AB7}
+.b-gray{background:var(--color-background-secondary);color:var(--color-text-secondary)}
+.sub-section{font-size:10px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.06em;padding:10px 10px 4px;background:var(--color-background-secondary);border-bottom:0.5px solid var(--color-border-tertiary)}
+.time-cell{font-size:11px;color:var(--color-text-tertiary);white-space:nowrap}
+.endik-cell{font-size:11px;color:var(--color-text-secondary);max-width:140px}
+.empty{padding:40px;text-align:center;color:var(--color-text-tertiary);font-size:13px}
+</style>
+
+<h2 class="sr-only">Acil İlaç Kartı 2025 — kategoriye göre ilaç dozları referans tablosu</h2>
+
+<div class="app">
+<div class="sb">
+  <div class="sb-logo">
+    <div class="sb-logo-title">Acil İlaç Kartı</div>
+    <div class="sb-logo-sub">2025 · GK / MAA</div>
+  </div>
+  <div class="sb-label">Kategoriler</div>
+  <div class="nav on" onclick="setTab(0,this)"><i class="ti ti-heart-rate-monitor" aria-hidden="true"></i>Resüsitasyon</div>
+  <div class="nav" onclick="setTab(1,this)"><i class="ti ti-needle" aria-hidden="true"></i>RSI — Entübasyon</div>
+  <div class="nav" onclick="setTab(2,this)"><i class="ti ti-brain" aria-hidden="true"></i>Antikonvülzanlar</div>
+  <div class="nav" onclick="setTab(3,this)"><i class="ti ti-mood-calm" aria-hidden="true"></i>Ajitasyon</div>
+  <div class="nav" onclick="setTab(4,this)"><i class="ti ti-pill" aria-hidden="true"></i>Antidotlar</div>
+</div>
+
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <h2 id="tab-title">Resüsitasyon İlaçları</h2>
+      <p id="tab-sub">Kardiyak arrest ve hemodinamik destek</p>
+    </div>
+    <div class="search-wrap">
+      <i class="ti ti-search" aria-hidden="true"></i>
+      <input type="text" placeholder="İlaç ara..." oninput="filterTable(this.value)" id="search-box"/>
+    </div>
+  </div>
+  <div class="content" id="content-area"></div>
+</div>
+</div>
+
+<script>
+const TABS = [
+  {
+    title:"Resüsitasyon İlaçları",
+    sub:"Kardiyak arrest ve hemodinamik destek",
+    cols:["İlaç","Doz","Rota"],
+    rows:[
+      {name:"Adrenalin", badge:"b-red", doses:["Arrest: 1 mg IV puşe","Anafilaksi: 0,3–0,5 mg IM"], route:"IV / IM"},
+      {name:"Amiodaron", badge:"b-red", doses:["Arrest nVT/VF: 300 mg → 150 mg IV","Nabızlı VT: 150 mg/10 dk + 1 mg/dk ilk 6 saat"], route:"IV"},
+      {name:"Lidokain", badge:"b-red", doses:["Arrest nVT/VF: 1–1,5 mg/kg IV","(2. doz yarısı)"], route:"IV"},
+      {name:"Adenozin", badge:"b-blue", doses:["6 mg IV bolus → tekrar 12 mg IV bolus"], route:"IV hızlı"},
+      {name:"Dopamin", badge:"b-teal", doses:["2–20 mcg/kg/dk IV inf"], route:"IV inf"},
+      {name:"Dobutamin", badge:"b-teal", doses:["2–20 mcg/kg/dk IV inf"], route:"IV inf"},
+      {name:"Noradrenalin", badge:"b-teal", doses:["5–40 mcg/dk IV inf"], route:"IV inf"},
+      {name:"Esmolol", badge:"b-blue", doses:["500 mcg/kg IV yükleme (>1 dk)","50 mcg/kg/dk IV idame"], route:"IV"},
+      {name:"Diltiazem", badge:"b-blue", doses:["0,25 mg/kg IV (>2 dk)"], route:"IV"},
+      {name:"Verapamil", badge:"b-blue", doses:["2,5–5 mg IV (>2 dk)"], route:"IV"},
+      {name:"Digoksin", badge:"b-blue", doses:["8–12 mcg/kg IV (>2 dk)"], route:"IV"},
+      {name:"Metoprolol", badge:"b-blue", doses:["2,5–5 mg IV (>2 dk), maks 15 mg"], route:"IV"},
+      {name:"Nitrogliserin", badge:"b-amber", doses:["5–100 mcg/dk IV"], route:"IV inf"},
+      {name:"Nikardipin", badge:"b-amber", doses:["3–5 mg/saat başla, 15 dk'da 1 mg artır, maks 15 mg/saat"], route:"IV inf"},
+      {name:"NaHCO₃", badge:"b-gray", doses:["1 mEq/kg IV"], route:"IV"},
+      {name:"MgSO₄", badge:"b-gray", doses:["TdP nabızlı/periarrest: 2 gr IV yavaş (>10 dk)","TdP → nVT/VF: 1–2 gr IV/IO bolus"], route:"IV / IV/IO"},
+      {name:"Aspirin", badge:"b-amber", doses:["AKS: 300 mg PO"], route:"PO"},
+      {name:"Klopidogrel", badge:"b-amber", doses:["AKS: 300–600 mg PO yükleme"], route:"PO"},
+      {name:"Tikagrelor", badge:"b-amber", doses:["AKS: 180 mg PO"], route:"PO"},
+      {name:"Heparin", badge:"b-amber", doses:["AKS: 60 IU/kg IV, maks 4000 IU"], route:"IV"},
+      {name:"Traneksamik Asit", badge:"b-red", doses:["Multitravma: 1 gr/10 dk → 1 gr/8 saat"], route:"IV"},
+    ]
+  },
+  {
+    title:"Hızlı Seri Ardışık Entübasyon (RSI)",
+    sub:"Ön tedavi, sedatifler ve paralizanlar",
+    cols:["İlaç","Doz","Etki Başlangıcı","Süre"],
+    sections:[
+      {label:"Ön Tedavi — Hipotansiyon", rows:[
+        {name:"Adrenalin (push-dose)", badge:"b-red", dose:"5–20 mcg IV, 30 sn'de — 2-5 dk'da bir tekrar", onset:"", dur:""},
+        {name:"Noradrenalin", badge:"b-teal", dose:"5–40 mcg/dk IV inf", onset:"", dur:""},
+      ]},
+      {label:"Sedatifler", rows:[
+        {name:"Etomidat", badge:"b-purple", dose:"0,3–0,5 mg/kg IV", onset:"< 1 dk", dur:"10–20 dk"},
+        {name:"Propofol", badge:"b-purple", dose:"0,5–1,5 mg/kg IV", onset:"20–40 sn", dur:"8–15 dk"},
+        {name:"Ketamin", badge:"b-purple", dose:"1–2 mg/kg IV", onset:"1 dk", dur:"10–20 dk"},
+        {name:"Midazolam", badge:"b-purple", dose:"0,1–0,3 mg/kg IV", onset:"1 dk", dur:"60–90 dk"},
+        {name:"Thiopental", badge:"b-purple", dose:"3–5 mg/kg IV", onset:"1 dk", dur:"5–10 dk"},
+      ]},
+      {label:"Paralizanlar", rows:[
+        {name:"Roküronyum", badge:"b-teal", dose:"1 mg/kg IV", onset:"1–3 dk", dur:"30–45 dk"},
+        {name:"Süksinilkolin", badge:"b-teal", dose:"1,5 mg/kg IV", onset:"45–60 sn", dur:"5–9 dk"},
+        {name:"Veküronyum", badge:"b-teal", dose:"0,1 mg/kg IV", onset:"2–3 dk", dur:"25–40 dk"},
+      ]},
+    ]
+  },
+  {
+    title:"Antikonvülzanlar",
+    sub:"Status epileptikus ve nöbet tedavisi",
+    cols:["İlaç","Doz","Rota"],
+    rows:[
+      {name:"Fenitoin", badge:"b-amber", doses:["20 mg/kg IV (50 mg/dk hızında)"], route:"IV"},
+      {name:"Levetirasetam", badge:"b-teal", doses:["60 mg/kg, maks 4500 mg, >5 dk"], route:"IV"},
+      {name:"Diazepam", badge:"b-blue", doses:["0,15 mg/kg IV, tek dozda maks 10 mg"], route:"IV"},
+      {name:"Midazolam", badge:"b-blue", doses:["Refrakter SE: 0,2 mg/kg IV yükleme","İdame: 0,1–0,5 mg/kg/saat IV"], route:"IV"},
+    ]
+  },
+  {
+    title:"Ajitasyon Tedavisi",
+    sub:"Akut ajitasyon ve psikomotor ajitasyon yönetimi",
+    cols:["İlaç","Doz","Rota"],
+    rows:[
+      {name:"Olanzapin", badge:"b-purple", doses:["5–10 mg PO / 10 mg IM"], route:"PO / IM"},
+      {name:"Haloperidol", badge:"b-purple", doses:["5 mg IM"], route:"IM"},
+      {name:"Lorazepam", badge:"b-blue", doses:["1–2 mg PO"], route:"PO"},
+    ]
+  },
+  {
+    title:"Antidotlar ve Endikasyonları",
+    sub:"Zehirlenme ve aşırı doz tedavisinde spesifik antidotlar",
+    cols:["Antidot","Doz","Endikasyon"],
+    rows:[
+      {name:"Naloksan", badge:"b-red", doses:["Spontan soluyorsa: 0,4 mg IV","Apneik/siyanotik: maks 2 mg IV"], endik:"Opioid, Klonidin"},
+      {name:"Flumazenil", badge:"b-blue", doses:["0,2 mg IV (>1 dk), maks 1 mg"], endik:"Benzodiazepin"},
+      {name:"Kalsiyum klorür", badge:"b-amber", doses:["%10'luk 10 mL IV >10 dk","Tekrar: 20 dk'da bir, 4 kez"], endik:"KKB, Beta bloker"},
+      {name:"Kalsiyum glukonat", badge:"b-amber", doses:["%10'luk 30 mL IV >10 dk","Tekrar: 20 dk'da bir, 4 kez"], endik:"KKB, Beta bloker"},
+      {name:"Difenhidramin / Biperiden", badge:"b-gray", doses:["Difenhidramin: 50 mg IV","Biperiden: 2,5–5 mg IV/IM"], endik:"Distoni"},
+      {name:"Glukagon", badge:"b-amber", doses:["5 mg IV bolus, maks 10 mg"], endik:"Beta bloker, KKB"},
+      {name:"Sodyum bikarbonat", badge:"b-gray", doses:["1–2 mEq/kg IV"], endik:"TCA, Salisilat"},
+      {name:"Fizostigmin", badge:"b-gray", doses:["0,5–2 mg IV (0,02 mg/kg) >5 dk"], endik:"Antikolinerjik"},
+      {name:"Atropin", badge:"b-teal", doses:["1 mg IV/IM/IO (tekrar)"], endik:"Organofosfat"},
+      {name:"Pralidoksim", badge:"b-teal", doses:["30 mg/kg IV bolus >20 dk","10 mg/kg/saat infüzyon"], endik:"Organofosfat"},
+      {name:"Digoksin Fab", badge:"b-blue", doses:["Vial sayısı = serum kons. (ng/mL) × kg / 100"], endik:"Digoksin"},
+      {name:"Etanol %10 IV", badge:"b-gray", doses:["10 mL/kg IV yükleme","1 mL/kg/saat infüzyon (HD varsa 2×)","Hedef: serum etanol 100 mg/dL"], endik:"Metanol"},
+      {name:"Metilen mavisi", badge:"b-blue", doses:["1 mg/kg IV >5 dk"], endik:"Oksitleyici toksinler"},
+      {name:"Asetilsistein (NAC)", badge:"b-teal", doses:["200 mg/kg IV / 4 saat inf","100 mg/kg / 16 saat inf (2 basamaklı)"], endik:"Asetaminofen"},
+      {name:"Sugammadeks", badge:"b-teal", doses:["2–4 mg/kg IV"], endik:"Roküronyum / Veküronyum"},
+      {name:"Lipid emülsiyonu %20", badge:"b-gray", doses:["1,5 mL/kg IV bolus","0,25 mL/kg/dk × 30–60 dk","Maks 12 mL/kg"], endik:"Lokal anestezikler, lipid-çözünür ilaçlar"},
+      {name:"Protamin sülfat", badge:"b-gray", doses:["1 mg = 100 IÜ Heparin","1 mg = 1 mg Enoksaparin","Uygulama >10 dk, maks 50 mg"], endik:"Heparin, Enoksaparin"},
+    ]
+  }
+];
+
+let activeTab = 0;
+let searchQ = '';
+
+function setTab(i, el) {
+  activeTab = i; searchQ = '';
+  document.getElementById('search-box').value = '';
+  document.querySelectorAll('.nav').forEach(n => n.classList.remove('on'));
+  el.classList.add('on');
+  renderContent();
+}
+
+function filterTable(q) { searchQ = q.toLowerCase(); renderContent(); }
+
+function hl(text) {
+  if (!searchQ) return text;
+  const re = new RegExp('(' + searchQ.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi');
+  return text.replace(re, '<mark style="background:#FAEEDA;color:#633806;border-radius:2px">$1</mark>');
+}
+
+function matchRow(r) {
+  if (!searchQ) return true;
+  const hay = (r.name + ' ' + (r.doses||[]).join(' ') + ' ' + (r.dose||'') + ' ' + (r.endik||'')).toLowerCase();
+  return hay.includes(searchQ);
+}
+
+function renderContent() {
+  const tab = TABS[activeTab];
+  document.getElementById('tab-title').textContent = tab.title;
+  document.getElementById('tab-sub').textContent = tab.sub;
+  const area = document.getElementById('content-area');
+
+  if (activeTab === 1) {
+    let html = `<table class="drug-table"><thead><tr>`;
+    tab.cols.forEach(c => html += `<th>${c}</th>`);
+    html += `</tr></thead><tbody>`;
+    let hasResult = false;
+    tab.sections.forEach(sec => {
+      const visible = sec.rows.filter(matchRow);
+      if (visible.length === 0) return;
+      hasResult = true;
+      html += `<tr><td colspan="4" class="sub-section">${sec.label}</td></tr>`;
+      visible.forEach(r => {
+        html += `<tr><td><span class="badge ${r.badge}">${hl(r.name)}</span></td><td class="dose-text">${hl(r.dose)}</td><td class="time-cell">${r.onset}</td><td class="time-cell">${r.dur}</td></tr>`;
+      });
+    });
+    html += `</tbody></table>`;
+    if (!hasResult) html = `<div class="empty"><i class="ti ti-search" style="font-size:24px;display:block;margin-bottom:8px" aria-hidden="true"></i>${searchQ} için sonuç bulunamadı.</div>`;
+    area.innerHTML = html;
+    return;
+  }
+
+  const rows = tab.rows || [];
+  const visible = rows.filter(matchRow);
+  if (visible.length === 0) {
+    area.innerHTML = `<div class="empty"><i class="ti ti-search" style="font-size:24px;display:block;margin-bottom:8px" aria-hidden="true"></i>"${searchQ}" için sonuç bulunamadı.</div>`;
+    return;
+  }
+
+  const hasEndik = activeTab === 4;
+  let html = `<table class="drug-table"><thead><tr>`;
+  tab.cols.forEach(c => html += `<th>${c}</th>`);
+  html += `</tr></thead><tbody>`;
+  visible.forEach(r => {
+    const doseHtml = (r.doses||[]).map((d,i) => `${i>0?'<br>':''}${hl(d)}`).join('');
+    if (hasEndik) {
+      html += `<tr><td><span class="badge ${r.badge}" style="margin-bottom:2px">${hl(r.name)}</span></td><td class="dose-text">${doseHtml}</td><td class="endik-cell">${hl(r.endik||'')}</td></tr>`;
+    } else {
+      html += `<tr><td><span class="badge ${r.badge}">${hl(r.name)}</span></td><td class="dose-text">${doseHtml}</td><td class="time-cell">${r.route||''}</td></tr>`;
+    }
+  });
+  html += `</tbody></table>`;
+  area.innerHTML = html;
+}
+
+renderContent();
+</script>
